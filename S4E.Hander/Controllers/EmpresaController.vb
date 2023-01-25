@@ -26,19 +26,24 @@ Namespace Controllers
 #End Region
 #Region "MÉTODOS"
         <HttpPost>
-        Public Function Adicionaempresa(<FromBody> empresaDto As CreateEmpresaDto) As IActionResult
+        Public Function AdicionaEmpresa(<FromBody> empresaDto As CreateEmpresaDto) As IActionResult
             Dim empresa As GetEmpresaDto = _empresaService.AdicionaEmpresa(empresaDto)
 
-            Return New CreatedAtActionResult(NameOf(RecuperaempresaPorId), "empresa",
+            Return New CreatedAtActionResult(NameOf(RecuperaEmpresaPorId), "empresa",
                                              New With {Key empresa.Id}, empresa)
         End Function
         <HttpGet>
-        Public Function Recuperaempresas() As IEnumerable(Of GetEmpresaDto)
+        Public Function RecuperaEmpresas() As IEnumerable(Of GetEmpresaDto)
             Return _empresaService.RecuperaEmpresas()
         End Function
 
+        <HttpGet("nome/{nome}")>
+        Public Function RecuperaEmpresasPorNome(nome As String) As IEnumerable(Of GetEmpresaDto)
+            Return _empresaService.RecuperaAssociadosPorNome(nome)
+        End Function
+
         <HttpGet("id/{id}")>
-        Public Function RecuperaempresaPorId(id As Integer) As IActionResult
+        Public Function RecuperaEmpresaPorId(id As Integer) As IActionResult
             Dim empresaDto As GetEmpresaDto = _empresaService.RecuperaEmpresaPorId(id)
             If empresaDto IsNot Nothing Then
                 Return New OkObjectResult(empresaDto)
@@ -47,7 +52,7 @@ Namespace Controllers
         End Function
 
         <HttpGet("cnpj/{cnpj}")>
-        Public Function RecuperaempresaPorCNPJ(cnpj As String) As IActionResult
+        Public Function RecuperaEmpresaPorCNPJ(cnpj As String) As IActionResult
             Dim empresaDto As GetEmpresaDto = _empresaService.RecuperaEmpresaPorCNPJ(cnpj)
             If empresaDto IsNot Nothing Then
                 Return New OkObjectResult(empresaDto)
@@ -55,7 +60,7 @@ Namespace Controllers
             Return New NotFoundObjectResult(empresaDto)
         End Function
         <HttpPost("{id}")>
-        Public Function Atualizaempresa(id As Integer, <FromBody> empresaDto As UpdateEmpresaDto) As IActionResult
+        Public Function AtualizaEmpresa(id As Integer, <FromBody> empresaDto As UpdateEmpresaDto) As IActionResult
             Dim resultado As Result = _empresaService.AtualizaEmpresa(id, empresaDto)
             If resultado.IsFailed Then
                 Return New NotFoundResult
@@ -64,7 +69,7 @@ Namespace Controllers
         End Function
 
         <HttpDelete("{id}")>
-        Public Function Deletaempresa(id As Integer) As IActionResult
+        Public Function DeletaEmpresa(id As Integer) As IActionResult
             Dim resultado As Result = _empresaService.DeletaEmpresa(id)
             If resultado.IsFailed Then
                 Return New NotFoundResult

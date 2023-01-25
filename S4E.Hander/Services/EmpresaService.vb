@@ -1,5 +1,6 @@
 ﻿Imports AutoMapper
 Imports FluentResults
+Imports Microsoft.Build.Experimental.ProjectCache
 Imports S4E.Context
 Imports S4E.Context.Dtos.AssociadoDto
 Imports S4E.Context.Dtos.EmpresaDto
@@ -68,6 +69,22 @@ Namespace Service
             End If
             Return Nothing
         End Function
+        Public Function RecuperaAssociadosPorNome(nome As String) As IEnumerable(Of GetEmpresaDto)
+            Dim empresas As New List(Of GetEmpresaDto)
+            Dim nomeReplace As String = nome.Replace("-", " ")
+            Dim empresaLista As New List(Of Empresa)
+            For Each empresa In _context.Empresas
+                If empresa.Nome = nomeReplace Then
+                    empresaLista.Add(empresa)
+                End If
+            Next
+            For Each empresa In empresaLista
+                If empresa.Nome = nomeReplace Then
+                    empresas.Add(PreencheEmpresaAssociado(empresa))
+                End If
+            Next
+            Return empresas
+        End Function
 
         Public Function AtualizaEmpresa(id As Integer, empresaDto As UpdateEmpresaDto) As Result
             Dim empresa As Empresa = _context.Empresas.FirstOrDefault(Function(a) a.Id = id)
@@ -85,10 +102,10 @@ Namespace Service
                 empresasEmpresas.AssociadoId = i
                 _context.AssociadoEmpresa.Add(empresasEmpresas)
             Next
-            If empresaDto.Cnpj Is Nothing Then
+            If String.IsNullOrEmpty(empresaDto.Cnpj) Then
                 empresaDto.Cnpj = empresa.Cnpj
             End If
-            If empresaDto.Nome Is Nothing Then
+            If String.IsNullOrEmpty(empresaDto.Nome) Then
                 empresaDto.Nome = empresa.Nome
             End If
 

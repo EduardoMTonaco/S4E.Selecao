@@ -36,6 +36,10 @@ Namespace Controllers
         Public Function RecuperaAssociados() As IEnumerable(Of GetAssociadoDto)
             Return _associadoService.RecuperaAssociados()
         End Function
+        <HttpGet("nome/{nome}")>
+        Public Function RecuperaAssociadosPorNome(nome As String) As IEnumerable(Of GetAssociadoDto)
+            Return _associadoService.RecuperaAssociadosPorNome(nome)
+        End Function
 
         <HttpGet("id/{id}")>
         Public Function RecuperaAssociadoPorId(id As Integer) As IActionResult

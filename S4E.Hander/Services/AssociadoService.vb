@@ -68,6 +68,22 @@ Namespace Service
             End If
             Return Nothing
         End Function
+        Public Function RecuperaAssociadosPorNome(nome As String) As IEnumerable(Of GetAssociadoDto)
+            Dim associados As New List(Of GetAssociadoDto)
+            Dim nomeReplace As String = nome.Replace("-", " ")
+            Dim associadoLista As New List(Of Associado)
+            For Each associado In _context.Associados
+                If associado.Nome = nomeReplace Then
+                    associadoLista.Add(associado)
+                End If
+            Next
+            For Each associado In associadoLista
+                If associado.Nome = nomeReplace Then
+                    associados.Add(PreencheEmpresasAssociado(associado))
+                End If
+            Next
+            Return associados
+        End Function
 
         Public Function AtualizaAssociado(id As Integer, associadoDto As UpdateAssociadoDto) As Result
             Dim associado As Associado = _context.Associados.FirstOrDefault(Function(a) a.Id = id)
@@ -85,10 +101,10 @@ Namespace Service
                 associadosEmpresas.EmpresaId = i
                 _context.AssociadoEmpresa.Add(associadosEmpresas)
             Next
-            If associadoDto.Cpf Is Nothing Then
+            If String.IsNullOrEmpty(associadoDto.Cpf) Then
                 associadoDto.Cpf = associado.Cpf
             End If
-            If associadoDto.Nome Is Nothing Then
+            If String.IsNullOrEmpty(associadoDto.Nome) Then
                 associadoDto.Nome = associado.Nome
             End If
 
