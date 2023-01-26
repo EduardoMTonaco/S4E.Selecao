@@ -22,21 +22,22 @@ Namespace Service
 #End Region
 
 #Region "MÉTODOS"
-        Public Function AdicionaAssociado(associadoDto As CreateAssociadoDto) As ReadAssociadoDto
+        Public Function AdicionaAssociado(associadoDto As CreateAssociadoDto) As GetAssociadoDto
             Dim associado As Associado = _mapper.Map(Of Associado)(associadoDto)
             _context.Associados.Add(associado)
             _context.SaveChanges()
-            Dim associadoMap As ReadAssociadoDto = _mapper.Map(Of ReadAssociadoDto)(associado)
+            Dim getAssociadoDto As GetAssociadoDto = _mapper.Map(Of GetAssociadoDto)(associado)
             For Each i In associadoDto.EmpresasId
-                Dim associadosEmpresas As New AssociadosEmpresas()
+                Dim associadosEmpresas As New AssociadoEmpresa()
                 associadosEmpresas.AssociadoId = associado.Id
                 associadosEmpresas.EmpresaId = i
                 _context.AssociadoEmpresa.Add(associadosEmpresas)
+                _context.SaveChanges()
             Next
-            _context.SaveChanges()
-            Return associadoMap
+
+            getAssociadoDto = PreencheEmpresasAssociado(associado)
+            Return getAssociadoDto
         End Function
-        '_mapper.Map<ReadFilmeDto>(filme)
 
         Public Function RecuperaAssociados() As IEnumerable(Of GetAssociadoDto)
             Dim associados As New List(Of Associado)
@@ -96,7 +97,7 @@ Namespace Service
                 End If
             Next
             For Each i In associadoDto.EmpresasId
-                Dim associadosEmpresas As New AssociadosEmpresas()
+                Dim associadosEmpresas As New AssociadoEmpresa()
                 associadosEmpresas.AssociadoId = associado.Id
                 associadosEmpresas.EmpresaId = i
                 _context.AssociadoEmpresa.Add(associadosEmpresas)
@@ -147,6 +148,22 @@ Namespace Service
             Next
             Return associadoDto
         End Function
+
+        Private Function PreencheEmpresaAssociado(associadoDto As GetAssociadoDto) As GetAssociadoDto
+            Dim AssociadoIds As New HashSet(Of Integer)
+            For Each ae In _context.AssociadoEmpresa
+                If ae.AssociadoId = associadoDto.Id Then
+                    AssociadoIds.Add(ae.EmpresaId)
+                End If
+            Next
+            For Each i In AssociadoIds
+                Dim associado As Associado = _context.Associados.FirstOrDefault(Function(e) e.Id = i)
+                Dim readAssociadoDto As ReadEmpresaDto = _mapper.Map(Of ReadEmpresaDto)(associado)
+                associadoDto.Empresas.Add(readAssociadoDto)
+            Next
+            Return associadoDto
+        End Function
+
 #End Region
 
     End Class

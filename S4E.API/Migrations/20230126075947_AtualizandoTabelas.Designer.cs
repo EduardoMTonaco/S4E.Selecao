@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using S4E.Context;
 
@@ -11,9 +12,11 @@ using S4E.Context;
 namespace S4E.API.Migrations
 {
     [DbContext(typeof(SQLServerDbContext))]
-    partial class SQLServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230126075947_AtualizandoTabelas")]
+    partial class AtualizandoTabelas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

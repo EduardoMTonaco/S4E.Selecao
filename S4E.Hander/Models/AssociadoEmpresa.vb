@@ -1,5 +1,5 @@
 ﻿Namespace Models
-    Public Class AssociadosEmpresas
+    Public Class AssociadoEmpresa
         Public Property AssociadoId As Integer
         Public Property Associado As Associado
         Public Property EmpresaId As Integer

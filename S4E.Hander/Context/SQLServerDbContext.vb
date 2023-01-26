@@ -8,7 +8,7 @@ Namespace Context
 #Region "Propriedades"
         Public Property Associados As DbSet(Of Associado)
         Public Property Empresas As DbSet(Of Empresa)
-        Public Property AssociadoEmpresa As DbSet(Of AssociadosEmpresas)
+        Public Property AssociadoEmpresa As DbSet(Of AssociadoEmpresa)
 #End Region
 
 #Region "Construtores"
@@ -16,9 +16,9 @@ Namespace Context
             MyBase.New(opt)
 
         End Sub
-        Public Sub New()
-
-        End Sub
+        'Public Sub New()
+        '    Me.Database.SetConnectionString("")
+        'End Sub
 #End Region
 
 #Region "Métodos"
@@ -32,14 +32,14 @@ Namespace Context
             modelBuilder.Entity(Of Empresa)().HasIndex(Function(e) e.Cnpj).IsUnique()
             modelBuilder.Entity(Of Associado)().HasIndex(Function(a) a.Cpf).IsUnique()
 
-            modelBuilder.Entity(Of AssociadosEmpresas)().HasKey(Function(ae) New With {ae.AssociadoId, ae.EmpresaId})
+            modelBuilder.Entity(Of AssociadoEmpresa)().HasKey(Function(ae) New With {ae.AssociadoId, ae.EmpresaId})
 
-            modelBuilder.Entity(Of AssociadosEmpresas)() _
+            modelBuilder.Entity(Of AssociadoEmpresa)() _
                 .HasOne(Function(ae) ae.Associado) _
                 .WithMany(Function(a) a.AssociadosEmpresas) _
                 .HasForeignKey(Function(ae) ae.AssociadoId)
 
-            modelBuilder.Entity(Of AssociadosEmpresas)() _
+            modelBuilder.Entity(Of AssociadoEmpresa)() _
                 .HasOne(Function(ae) ae.Empresa) _
                 .WithMany(Function(e) e.AssociadosEmpresas) _
                 .HasForeignKey(Function(ae) ae.EmpresaId)

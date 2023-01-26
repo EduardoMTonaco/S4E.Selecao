@@ -20,13 +20,13 @@ Namespace Models
 
         Public Property DataDeNascimento As DateTime?
         Public Property EmpresasId As ICollection(Of Integer)
-        Public Overridable Property AssociadosEmpresas As ICollection(Of AssociadosEmpresas)
+        Public Overridable Property AssociadosEmpresas As ICollection(Of AssociadoEmpresa)
 
 
 #End Region
 #Region "Consturores"
         Public Sub New()
-            AssociadosEmpresas = New HashSet(Of AssociadosEmpresas)
+            AssociadosEmpresas = New HashSet(Of AssociadoEmpresa)
             EmpresasId = New HashSet(Of Integer)
         End Sub
 #End Region

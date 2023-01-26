@@ -23,19 +23,19 @@ Namespace Service
 #End Region
 
 #Region "MÉTODOS"
-        Public Function AdicionaEmpresa(dto As CreateEmpresaDto) As GetEmpresaDto
-            Dim empresa As Empresa = _mapper.Map(Of Empresa)(dto)
+        Public Function AdicionaEmpresa(empresaDto As CreateEmpresaDto) As GetEmpresaDto
+            Dim empresa As Empresa = _mapper.Map(Of Empresa)(empresaDto)
             _context.Empresas.Add(empresa)
             _context.SaveChanges()
-
-            For Each i In dto.AssociadosId
-                Dim empresasEmpresas As New AssociadosEmpresas()
-                empresasEmpresas.EmpresaId = empresa.Id
-                empresasEmpresas.AssociadoId = i
-                _context.AssociadoEmpresa.Add(empresasEmpresas)
+            Dim empresaMap As GetEmpresaDto = _mapper.Map(Of GetEmpresaDto)(empresa)
+            For Each i In empresaDto.AssociadosId
+                Dim associadoEmpresas As New AssociadoEmpresa()
+                associadoEmpresas.EmpresaId = empresa.Id
+                associadoEmpresas.EmpresaId = i
+                _context.AssociadoEmpresa.Add(associadoEmpresas)
             Next
             _context.SaveChanges()
-            Return PreencheEmpresaAssociado(empresa)
+            Return empresaMap
         End Function
 
         Public Function RecuperaEmpresas() As IEnumerable(Of GetEmpresaDto)
@@ -97,7 +97,7 @@ Namespace Service
                 End If
             Next
             For Each i In empresaDto.AssociadosId
-                Dim empresasEmpresas As New AssociadosEmpresas()
+                Dim empresasEmpresas As New AssociadoEmpresa()
                 empresasEmpresas.EmpresaId = empresa.Id
                 empresasEmpresas.AssociadoId = i
                 _context.AssociadoEmpresa.Add(empresasEmpresas)
@@ -138,6 +138,21 @@ Namespace Service
             Dim AssociadoIds As New HashSet(Of Integer)
             For Each ae In _context.AssociadoEmpresa
                 If ae.EmpresaId = empresa.Id Then
+                    AssociadoIds.Add(ae.AssociadoId)
+                End If
+            Next
+            For Each i In AssociadoIds
+                Dim associado As Associado = _context.Associados.FirstOrDefault(Function(e) e.Id = i)
+                Dim readAssociadoDto As ReadAssociadoDto = _mapper.Map(Of ReadAssociadoDto)(associado)
+                empresaDto.Associados.Add(readAssociadoDto)
+            Next
+            Return empresaDto
+        End Function
+
+        Private Function PreencheEmpresaAssociado(empresaDto As GetEmpresaDto) As GetEmpresaDto
+            Dim AssociadoIds As New HashSet(Of Integer)
+            For Each ae In _context.AssociadoEmpresa
+                If ae.EmpresaId = empresaDto.Id Then
                     AssociadoIds.Add(ae.AssociadoId)
                 End If
             Next

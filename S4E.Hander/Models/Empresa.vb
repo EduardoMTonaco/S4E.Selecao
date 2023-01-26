@@ -18,11 +18,11 @@ Namespace Models
         <Required(ErrorMessage:="CNPJ Necessario")>
         <StringLength(14, ErrorMessage:="CNPJ deve ter 14 caracteres numericos")>
         Public Property Cnpj As String
-        Public Overridable Property AssociadosEmpresas As ICollection(Of AssociadosEmpresas)
+        Public Overridable Property AssociadosEmpresas As ICollection(Of AssociadoEmpresa)
 #End Region
 #Region "Consturores"
         Public Sub New()
-            AssociadosEmpresas = New HashSet(Of AssociadosEmpresas)
+            AssociadosEmpresas = New HashSet(Of AssociadoEmpresa)
         End Sub
 #End Region
 #Region "Métodos"

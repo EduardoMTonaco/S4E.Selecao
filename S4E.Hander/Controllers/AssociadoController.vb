@@ -27,7 +27,7 @@ Namespace Controllers
 #Region "MÉTODOS"
         <HttpPost>
         Public Function AdicionaAssociado(<FromBody> associadoDto As CreateAssociadoDto) As IActionResult
-            Dim associado As ReadAssociadoDto = _associadoService.AdicionaAssociado(associadoDto)
+            Dim associado As GetAssociadoDto = _associadoService.AdicionaAssociado(associadoDto)
 
             Return New CreatedAtActionResult(NameOf(RecuperaAssociadoPorId), "Associado",
                                              New With {Key associado.Id}, associado)
