@@ -31,10 +31,11 @@ Namespace Service
             For Each i In empresaDto.AssociadosId
                 Dim associadoEmpresas As New AssociadoEmpresa()
                 associadoEmpresas.EmpresaId = empresa.Id
-                associadoEmpresas.EmpresaId = i
+                associadoEmpresas.AssociadoId = i
                 _context.AssociadoEmpresa.Add(associadoEmpresas)
             Next
             _context.SaveChanges()
+            empresaMap = PreencheEmpresaAssociado(empresaMap)
             Return empresaMap
         End Function
 
@@ -97,10 +98,10 @@ Namespace Service
                 End If
             Next
             For Each i In empresaDto.AssociadosId
-                Dim empresasEmpresas As New AssociadoEmpresa()
-                empresasEmpresas.EmpresaId = empresa.Id
-                empresasEmpresas.AssociadoId = i
-                _context.AssociadoEmpresa.Add(empresasEmpresas)
+                Dim AssociadoEmpresa As New AssociadoEmpresa()
+                AssociadoEmpresa.EmpresaId = empresa.Id
+                AssociadoEmpresa.AssociadoId = i
+                _context.AssociadoEmpresa.Add(AssociadoEmpresa)
             Next
             If String.IsNullOrEmpty(empresaDto.Cnpj) Then
                 empresaDto.Cnpj = empresa.Cnpj
